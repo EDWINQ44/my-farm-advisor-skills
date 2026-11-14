@@ -509,6 +509,14 @@ geneticist — gets both without us choosing their agent harness for them.
 | Weather | [`weather/INDEX.md`](my-farm-advisor/weather/INDEX.md) | NASA POWER weather and derived analysis |
 | Data pipeline | [`data-pipeline/README.md`](my-farm-advisor/data-pipeline/README.md) | Country-aware ingest, per-field rendering, runtime management |
 
+**Assignment 2 comparison subskill:** [`eda-farm-comparison`](my-farm-advisor/eda/eda-farm-comparison/GUIDE.md)
+compares the three Assignment-2 demo producers (IL/DeKalb, IA/Story, NE/York) on field area, growing-season
+climate, and CDL crop composition. Run
+`scripts/eda/eda_farm_comparison.py` from the Assignment-2 runtime
+(`${DATA_PIPELINE_DATA_ROOT}=/home/coder/my-farm-advisor-runtime-a2`); regenerated figures and tables land in that
+runtime under `eda/farm-comparison/`, with committed example assets under `eda-farm-comparison/examples/output/`
+and the final report PDF at `eda-farm-comparison/report/EDA_Farm_Comparison_Report_A2.pdf`.
+
 ### 🌱 My Farm Breeding Trial Management
 
 | Area | Examples of work |

@@ -1,0 +1,75 @@
+producer,year,category_group,crop_name,area_ha,pct_of_classified,classified_ha,total_field_ha,coverage_pct,nodata_pct,weighting
+IA,2021,Corn,Corn,349.77,19.59,1785.84,1792.21,99.64,0.36,classified field area
+IA,2021,Other,Forest,0.82,0.05,1785.84,1792.21,99.64,0.36,classified field area
+IA,2021,Other,Grass/Pasture,15.84,0.89,1785.84,1792.21,99.64,0.36,classified field area
+IA,2021,Soybeans,Soybeans,1419.4,79.48,1785.84,1792.21,99.64,0.36,classified field area
+IA,2022,Corn,Corn,1566.47,87.71,1786.07,1792.21,99.66,0.34,classified field area
+IA,2022,Other,Forest,1.27,0.07,1786.07,1792.21,99.66,0.34,classified field area
+IA,2022,Other,Grass/Pasture,21.21,1.19,1786.07,1792.21,99.66,0.34,classified field area
+IA,2022,Soybeans,Soybeans,197.12,11.04,1786.07,1792.21,99.66,0.34,classified field area
+IA,2023,Corn,Corn,369.57,20.69,1786.18,1792.21,99.66,0.34,classified field area
+IA,2023,Other,Forest,1.27,0.07,1786.18,1792.21,99.66,0.34,classified field area
+IA,2023,Other,Grass/Pasture,24.9,1.39,1786.18,1792.21,99.66,0.34,classified field area
+IA,2023,Other,Winter Wheat,0.9,0.05,1786.18,1792.21,99.66,0.34,classified field area
+IA,2023,Soybeans,Soybeans,1389.55,77.79,1786.18,1792.21,99.66,0.34,classified field area
+IA,2024,Corn,Corn,1370.37,77.25,1773.95,1792.21,98.98,1.02,classified field area
+IA,2024,Other,Alfalfa,0.64,0.04,1773.95,1792.21,98.98,1.02,classified field area
+IA,2024,Other,Fallow/Idle,2.34,0.13,1773.95,1792.21,98.98,1.02,classified field area
+IA,2024,Other,Forest,0.36,0.02,1773.95,1792.21,98.98,1.02,classified field area
+IA,2024,Other,Grass/Pasture,16.99,0.96,1773.95,1792.21,98.98,1.02,classified field area
+IA,2024,Other,Winter Wheat,0.1,0.01,1773.95,1792.21,98.98,1.02,classified field area
+IA,2024,Soybeans,Soybeans,383.14,21.6,1773.95,1792.21,98.98,1.02,classified field area
+IA,2025,Corn,Corn,996.45,56.21,1772.73,1792.21,98.91,1.09,classified field area
+IA,2025,Other,Forest,1.53,0.09,1772.73,1792.21,98.91,1.09,classified field area
+IA,2025,Other,Grass/Pasture,17.85,1.01,1772.73,1792.21,98.91,1.09,classified field area
+IA,2025,Soybeans,Soybeans,756.9,42.7,1772.73,1792.21,98.91,1.09,classified field area
+IL,2021,Corn,Corn,1567.47,66.17,2368.87,2394.83,98.92,1.08,classified field area
+IL,2021,Other,Forest,0.2,0.01,2368.87,2394.83,98.92,1.08,classified field area
+IL,2021,Other,Grass/Pasture,7.44,0.31,2368.87,2394.83,98.92,1.08,classified field area
+IL,2021,Other,Winter Wheat,0.27,0.01,2368.87,2394.83,98.92,1.08,classified field area
+IL,2021,Soybeans,Soybeans,793.49,33.5,2368.87,2394.83,98.92,1.08,classified field area
+IL,2022,Corn,Corn,1509.01,63.7,2368.96,2394.83,98.92,1.08,classified field area
+IL,2022,Other,Alfalfa,0.08,0.0,2368.96,2394.83,98.92,1.08,classified field area
+IL,2022,Other,Forest,1.08,0.05,2368.96,2394.83,98.92,1.08,classified field area
+IL,2022,Other,Grass/Pasture,9.38,0.4,2368.96,2394.83,98.92,1.08,classified field area
+IL,2022,Other,Winter Wheat,0.36,0.02,2368.96,2394.83,98.92,1.08,classified field area
+IL,2022,Soybeans,Soybeans,849.05,35.84,2368.96,2394.83,98.92,1.08,classified field area
+IL,2023,Corn,Corn,1838.88,77.63,2368.77,2394.83,98.91,1.09,classified field area
+IL,2023,Other,Alfalfa,0.26,0.01,2368.77,2394.83,98.91,1.09,classified field area
+IL,2023,Other,Forest,1.62,0.07,2368.77,2394.83,98.91,1.09,classified field area
+IL,2023,Other,Grass/Pasture,8.08,0.34,2368.77,2394.83,98.91,1.09,classified field area
+IL,2023,Soybeans,Soybeans,519.94,21.95,2368.77,2394.83,98.91,1.09,classified field area
+IL,2024,Corn,Corn,1715.16,72.48,2366.38,2394.83,98.81,1.19,classified field area
+IL,2024,Other,Forest,0.82,0.03,2366.38,2394.83,98.81,1.19,classified field area
+IL,2024,Other,Grass/Pasture,13.12,0.55,2366.38,2394.83,98.81,1.19,classified field area
+IL,2024,Soybeans,Soybeans,637.28,26.93,2366.38,2394.83,98.81,1.19,classified field area
+IL,2025,Corn,Corn,1855.85,78.71,2357.96,2394.83,98.46,1.54,classified field area
+IL,2025,Other,Alfalfa,0.18,0.01,2357.96,2394.83,98.46,1.54,classified field area
+IL,2025,Other,Forest,1.63,0.07,2357.96,2394.83,98.46,1.54,classified field area
+IL,2025,Other,Grass/Pasture,12.13,0.51,2357.96,2394.83,98.46,1.54,classified field area
+IL,2025,Other,Winter Wheat,0.93,0.04,2357.96,2394.83,98.46,1.54,classified field area
+IL,2025,Soybeans,Soybeans,487.24,20.66,2357.96,2394.83,98.46,1.54,classified field area
+NE,2021,Corn,Corn,1017.7,50.48,2015.92,2031.41,99.24,0.76,classified field area
+NE,2021,Other,Alfalfa,0.08,0.0,2015.92,2031.41,99.24,0.76,classified field area
+NE,2021,Other,Forest,3.05,0.15,2015.92,2031.41,99.24,0.76,classified field area
+NE,2021,Other,Grass/Pasture,1.08,0.05,2015.92,2031.41,99.24,0.76,classified field area
+NE,2021,Other,Winter Wheat,0.53,0.03,2015.92,2031.41,99.24,0.76,classified field area
+NE,2021,Soybeans,Soybeans,993.48,49.28,2015.92,2031.41,99.24,0.76,classified field area
+NE,2022,Corn,Corn,1588.99,78.81,2016.12,2031.41,99.25,0.75,classified field area
+NE,2022,Other,Forest,3.15,0.16,2016.12,2031.41,99.25,0.75,classified field area
+NE,2022,Other,Grass/Pasture,1.19,0.06,2016.12,2031.41,99.25,0.75,classified field area
+NE,2022,Other,Winter Wheat,0.09,0.0,2016.12,2031.41,99.25,0.75,classified field area
+NE,2022,Soybeans,Soybeans,422.69,20.97,2016.12,2031.41,99.25,0.75,classified field area
+NE,2023,Corn,Corn,1019.55,50.57,2016.04,2031.41,99.24,0.76,classified field area
+NE,2023,Other,Forest,2.59,0.13,2016.04,2031.41,99.24,0.76,classified field area
+NE,2023,Other,Grass/Pasture,1.26,0.06,2016.04,2031.41,99.24,0.76,classified field area
+NE,2023,Other,Winter Wheat,0.35,0.02,2016.04,2031.41,99.24,0.76,classified field area
+NE,2023,Soybeans,Soybeans,992.29,49.22,2016.04,2031.41,99.24,0.76,classified field area
+NE,2024,Corn,Corn,1869.24,92.94,2011.13,2031.41,99.0,1.0,classified field area
+NE,2024,Other,Forest,3.33,0.17,2011.13,2031.41,99.0,1.0,classified field area
+NE,2024,Other,Grass/Pasture,31.31,1.56,2011.13,2031.41,99.0,1.0,classified field area
+NE,2024,Soybeans,Soybeans,107.25,5.33,2011.13,2031.41,99.0,1.0,classified field area
+NE,2025,Corn,Corn,1145.48,57.31,1998.85,2031.41,98.4,1.6,classified field area
+NE,2025,Other,Forest,8.8,0.44,1998.85,2031.41,98.4,1.6,classified field area
+NE,2025,Other,Grass/Pasture,9.01,0.45,1998.85,2031.41,98.4,1.6,classified field area
+NE,2025,Soybeans,Soybeans,835.56,41.8,1998.85,2031.41,98.4,1.6,classified field area

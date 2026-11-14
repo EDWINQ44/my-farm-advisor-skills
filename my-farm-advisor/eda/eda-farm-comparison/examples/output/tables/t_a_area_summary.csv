@@ -1,0 +1,4 @@
+producer,farm,county,n_fields,total_ha,total_acres,mean_ha,median_ha,min_ha,max_ha,range_ha,iqr_ha
+IL,dekalb-demo-farm,DeKalb County,10,2394.8,5917.7,239.5,256.2,187.7,296.1,108.4,77.3
+IA,story-demo-farm,Story County,10,1792.2,4428.6,179.2,174.9,162.9,217.3,54.4,15.8
+NE,york-demo-farm,York County,10,2031.4,5019.8,203.1,207.8,184.3,221.8,37.5,17.4

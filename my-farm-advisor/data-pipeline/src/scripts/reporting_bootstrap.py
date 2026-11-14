@@ -271,6 +271,7 @@ def ensure_canonical_data_tree(
     farm_name: str = DEFAULT_FARM_NAME,
     inventory_path: Path | None = None,
     include_farm: bool = True,
+    state: str = "IA",
 ) -> list[str]:
     (DATA_ROOT / "shared" / "weather").mkdir(parents=True, exist_ok=True)
     (DATA_ROOT / "shared" / "geoadmin" / "l0_countries" / "raw").mkdir(
@@ -412,7 +413,7 @@ def ensure_canonical_data_tree(
             "grower_slug": grower_slug,
             "farm_slug": farm_slug,
             "display_name": farm_name,
-            "state": "IA",
+            "state": state,
             "country": "US",
             "default_crs": "EPSG:4326",
             "notes": "Canonical farm metadata",

@@ -39,6 +39,29 @@ area_ha_est, crop, area_acres` (+ `source`, and source-specific ids like
   the whole state — sanity-check county names against the farm's state before
   accepting fields.
 
+Append-only farm expansion (keeps existing assignment fields untouched):
+
+```bash
+python scripts/ingest/download_csb_fields.py \
+  --bbox S W N E --min-area-ha 40 --max-area-ha 300 \
+  --field-prefix ia-r --field-start-index 4 --max-fields 7 --skip-existing \
+  --county-fips 19169 --state-fips 19 --state IA \
+  --crop-names Corn,Soybeans --dry-run
+```
+
+* `--field-start-index` numbers new slugs after the existing ones; with
+  `--skip-existing`, only slugs **below** that index are protected, so a
+  re-run replaces a previously drafted batch instead of protecting it.
+* `--county-fips` enforces real county containment: candidate representative
+  point inside the TIGER county polygon and ≥99.9 % of polygon area inside
+  it. The bbox alone is never sufficient.
+* `--crop-names` is a case-insensitive filter on the CSB `crop:name`
+  (2023 crop vintage). `--max-area-ha` caps merged/dissolved polygons.
+* `--dry-run` prints candidates and rejection counts without writing.
+* The CSB/FIBOA snapshot is one geometry vintage
+  (`NationalCSB_2016-2023_rev23`, dissolved by 2023 crop), not annual
+  boundary history. Provenance records `snapshot` and accumulates `runs`.
+
 ## AU / ON / EU / anywhere OSM maps farms — Overpass (`download_osm_fields.py`)
 
 Overpass QL: ways filtered on `landuse=farmland` within the bbox; returned polygons are closed. Measured coverage

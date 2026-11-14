@@ -170,7 +170,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cdl-years",
         default=None,
-        help="Comma-separated explicit CDL years. Overrides latest/window fallback.",
+        help=(
+            "Comma-separated explicit CDL years. Overrides latest/window fallback "
+            "in both --raster-only and per-farm extraction modes."
+        ),
     )
     parser.add_argument(
         "--cdl-latest-year",
@@ -259,7 +262,9 @@ def main():
     if not us_fields.empty:
         print("State CDL coverage:", ", ".join(state_fips_values))
 
-    target_years = _target_cdl_years()
+    requested_years = _parse_years(args.cdl_years)
+    target_years = requested_years or _target_cdl_years()
+    required_years = len(target_years) if requested_years else 5
     cached_years = [
         year
         for year in target_years
@@ -267,10 +272,10 @@ def main():
     ]
     if (
         not force
-        and len(cached_years) >= 5
+        and len(cached_years) >= required_years
         and farm_cdl_rotation_path(grower_slug, farm_slug).exists()
     ):
-        selected_years = sorted(cached_years[:5], reverse=True)
+        selected_years = sorted(cached_years[:required_years], reverse=True)
         composition_path = farm_cdl_full_composition_path(
             grower_slug,
             farm_slug,
@@ -310,7 +315,12 @@ def main():
         if not us_fields.empty:
             for state_fips in state_fips_values:
                 if "state_fips" in us_fields.columns:
-                    state_mask = us_fields["state_fips"].astype(str).str.zfill(2) == state_fips
+                    raw = us_fields["state_fips"]
+                    norm = raw.astype(str).str.strip().str.zfill(2)
+                    blank = raw.isna() | norm.isin(["nan", "", "None"])
+                    if len(state_fips_values) == 1:
+                        norm = norm.mask(blank, state_fips_values[0])
+                    state_mask = norm == state_fips
                 else:
                     state_mask = pd.Series([True] * len(us_fields), index=us_fields.index)
                 state_fields = us_fields.loc[state_mask].copy()
@@ -351,7 +361,7 @@ def main():
         print(f"  Saved: {year_output}")
         crop_mix_frames.append(cdl_year)
         completed_years.append(year)
-        if len(completed_years) >= 5:
+        if len(completed_years) >= required_years:
             break
 
     if not crop_mix_frames:
