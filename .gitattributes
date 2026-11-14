@@ -4,6 +4,10 @@
 *.json text
 *.geojson text
 
+# Binary document/image assets (no text conversion, treated as binaries in diffs)
+*.pdf -diff -text
+*.png -diff -text
+
 # Git LFS for large binary assets
 *.npy filter=lfs diff=lfs merge=lfs -text
 *.npz filter=lfs diff=lfs merge=lfs -text

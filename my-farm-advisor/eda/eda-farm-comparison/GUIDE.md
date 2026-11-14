@@ -13,8 +13,9 @@ tags: [eda, comparison, fields, climate, cdl, static-figures]
 Cross-producer exploratory comparison for the assignment-2 demo farms. The
 workflow builds seven static PNG figures and eight small CSV tables from the
 canonical runtime tree, plus a run manifest with input hashes and checks. It
-is deliberately narrow: no soil, no dashboards, no interactive maps, and no
-final report assembly.
+is deliberately narrow: no soil, no dashboards, and no interactive maps. The
+final PDF report is assembled separately from these figures and tables (see
+`examples/output/` and the report in this branch).
 
 Questions answered:
 
@@ -32,7 +33,8 @@ Questions answered:
 - You need static figures and compact tables for a report that is assembled
   elsewhere.
 - You must show climate and CDL values without treating fields in the same
-  NASA POWER cell as independent observations.
+  NASA POWER cell as independent observations: each distinct climate unit is
+  one value, and fields in a shared cell are not independent replicates.
 
 Do not use this workflow for soil analysis, interactive dashboards, or
 producer map HTML output. Use `../eda-explore/GUIDE.md`,
@@ -74,6 +76,12 @@ eda/farm-comparison/
 └── manifests/ run_manifest.json and review_log.md
 ```
 
+The final PDF report (`EDA_Farm_Comparison_Report_A2.pdf`) and committed small
+example figures/tables live in this branch under `eda-farm-comparison/report/`
+and `eda-farm-comparison/examples/output/` respectively, so they are easy to
+distribute without the full runtime. The canonical, fully reproducible outputs
+and the raw data stay in the runtime (never committed).
+
 Refresh the runtime source after editing the script:
 
 ```bash
@@ -99,17 +107,19 @@ DATA_PIPELINE_DATA_ROOT=/home/coder/my-farm-advisor-runtime-a2 \
 | --- | --- | --- |
 | `fig_b1_precip_apr_sep_by_unit.png` | How much growing-season rainfall per place and year? | Sum of daily `PRECTOTCORR`, April 1 - September 30, **per climate unit** |
 | `fig_b2_tmean_apr_sep_selected_fields.png` | How does the thermal season compare? | Mean `T2M` for the largest field per producer (`il-r1`, `ia-r1`, `ne-r1`) |
-| `t_b_climate_units.csv` | Which fields share a NASA POWER cell? | Fields with identical daily series are one unit; `n_fields_in_unit` |
-| `t_b_growing_season.csv` | Unit-year summaries | 183 days, precipitation mm, mean temperature degC |
-| `t_b_variability.csv` | Within- and between-producer variability | Min/max/range across **units**, with `n_fields` and `n_climate_units` |
+| `t_b_climate_units.csv` | Which fields share a NASA POWER (MERRA-2) cell? | Fields with identical daily series are one distinct unit; `n_fields_in_unit` |
+| `t_b_growing_season.csv` | Unit-year summaries | 183 valid days, precipitation mm, mean temperature degC |
+| `t_b_variability.csv` | Within- and between-producer variability | Min/max/range across **distinct climate units**, with `n_fields` and `n_climate_units` |
 
 Rules enforced by the script:
 
-- Fields whose daily series are identical are grouped into one climate unit.
-  They are **not** independent observations.
+- Fields whose daily series are identical are grouped into one distinct climate
+  unit. Fields inside a shared cell are **not** independent observations.
 - Precipitation is summed per unit, never across fields. Summing field rows
   would multiply the same cell rainfall.
-- Each April-September window must contain 183 days.
+- Every April-September window must contain exactly 183 days, each with valid
+  precipitation (`PRECTOTCORR`) and temperature (`T2M`) values (no NaN, no
+  NASA POWER `-999` fill), not merely 183 rows.
 
 ### C. CDL 2021-2025
 
@@ -142,20 +152,25 @@ with the county in red. No basemap imagery is downloaded; all layers are local.
 
 ## Interpretation limits
 
-- **Selection bias:** fields are the 10 largest corn/soybean CSB polygons per
-  county, capped at 40-300 ha. The area distribution is truncated. These are
-  not random samples of the county or state, and the three producers are not
+- **Selection:** the demo fields are real USDA CSB polygons. For IL and IA they
+  retain the original assignment-1 fields (`r1`-`r3`) and add a corn/soybean
+  expansion filtered by crop, 40-300 ha area, and county containment; NE was
+  selected from scratch with the same filter. This is not a ranked sample and
+  not representative of the county or state, and the three producers are not
   representative of Illinois, Iowa or Nebraska.
 - **Boundary vintage:** CSB is a single 2023 snapshot, not annual or cadastral
   history. `csb_crop_2023` is a 2023 label; CDL results are annual.
-- **Climate:** NASA POWER is a modelled ~0.5-degree product. Field values are
-  cell values. Effective sample size is the number of climate units
+- **Climate:** NASA POWER is a modelled product. The climate units are the
+  MERRA-2 grid (~0.5 deg latitude x 0.625 deg longitude); radiation from the
+  1-degree SYN1DEG product does not drive unit grouping. Field values are cell
+  values. Effective sample size is the number of **distinct climate units**
   (2 for IL, 2 for IA, 3 for NE), not 10 fields.
 - **CDL:** 30 m annual classification with mixed pixels and class error;
   0-3 % of each field-year is unclassified. "Other" is a heterogeneous bucket
   (alfalfa, forest, grass/pasture, fallow/idle, winter wheat).
-- **Irrigation:** there is no per-field irrigation data. Do not attribute
-  differences in crop mix or climate to irrigation.
+- **Irrigation:** there is no per-field irrigation data. The only irrigation
+  evidence is county-level (e.g. NASS Census of Agriculture for York County);
+  do not attribute differences in crop mix or climate to irrigation.
 - No soil analysis is included.
 
 ## Validation

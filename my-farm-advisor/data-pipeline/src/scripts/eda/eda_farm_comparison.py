@@ -7,7 +7,7 @@ interactive maps, no final report assembly.
 
 Design rules enforced here:
 - NASA POWER values are cell values. Fields with identical daily series are
-  grouped into one climate unit and never counted as independent replicates.
+  grouped into one distinct climate unit and are not independent observations.
 - Growing-season precipitation is summed per climate unit, never across
   fields. A naive field-level sum would multiply the same cell rainfall.
 - CDL percentages are normalized to classified pixels per field-year; the
@@ -60,6 +60,24 @@ CDL_YEARS = (2021, 2025)
 GROWING_MONTHS = (4, 5, 6, 7, 8, 9)
 EXPECTED_FIELDS = 10
 WEAK_DOMINANCE_POINTS = 10.0
+
+
+def _natural_field_key(field_id: str) -> int:
+    """Sort key for field ids like 'il-r1', 'il-r10' so r2 < r10.
+
+    Natural field order is r1, r2, ..., r10 (ascending numeric suffix), never
+    the lexicographic order (r1, r10, r2). Returns an integer ordinal so that
+    pandas sorts field ids numerically; non-numeric suffixes sort last.
+    """
+    digits = []
+    for char in reversed(field_id):
+        if char.isdigit():
+            digits.append(char)
+        else:
+            break
+    if digits:
+        return int("".join(reversed(digits)))
+    return 10**9
 
 CORN = "Corn"
 SOY = "Soybeans"
@@ -185,7 +203,13 @@ def load_fields() -> tuple[gpd.GeoDataFrame, pd.DataFrame]:
                 "source": row.get("source", ""),
             }
         )
-    field_table = pd.DataFrame(rows).sort_values(["producer", "field_id"]).reset_index(drop=True)
+    field_table = pd.DataFrame(rows)
+    field_table["__field_ord"] = field_table["field_id"].map(_natural_field_key)
+    field_table = (
+        field_table.sort_values(["producer", "__field_ord"])
+        .drop(columns=["__field_ord"])
+        .reset_index(drop=True)
+    )
     return all_fields, field_table
 
 
@@ -294,6 +318,23 @@ def growing_season(weather: pd.DataFrame) -> pd.DataFrame:
         counts.reset_index(), on="climate_unit", how="left", validate="many_to_one"
     )
     grouped["precip_mm"] = grouped["precip_mm"].round(1)
+
+    # Daily-validity guard (not just a row count): every April-September window
+    # must contain exactly 183 distinct dates AND have valid precipitation and
+    # temperature on each of those days (no NaN, no NASA POWER -999 fill).
+    per_unit_year = season.groupby(["climate_unit", "year"])
+    for (unit, year), group in per_unit_year:
+        day_count = group["date"].nunique()
+        valid_precip = group["PRECTOTCORR"].notna() & (group["PRECTOTCORR"] > -989)
+        valid_t2m = group["T2M"].notna() & (group["T2M"] > -989)
+        valid_days = set(group.loc[valid_precip & valid_t2m, "date"])
+        if day_count != 183 or len(valid_days) != 183:
+            missing = sorted(set(group["date"].dt.date) - valid_days)
+            raise SystemExit(
+                f"{unit}/{year}: April-September window has {day_count} unique dates "
+                f"but only {len(valid_days)} with valid precip+temp "
+                f"(missing/invalid: {missing[:6] or 'none'})"
+            )
     grouped["tmean_c"] = grouped["tmean_c"].round(2)
     return grouped.sort_values(["producer", "climate_unit", "year"]).reset_index(drop=True)
 
@@ -323,7 +364,7 @@ def climate_variability(season: pd.DataFrame, units: pd.DataFrame) -> pd.DataFra
                     "tmean_range_c": round(
                         float(sub["tmean_c"].max() - sub["tmean_c"].min()), 2
                     ),
-                    "independent_observations": "climate units, not fields",
+                    "distinct_climate_units": "climate units, not fields",
                 }
             )
     return pd.DataFrame(rows)
@@ -443,7 +484,13 @@ def dominant_table(cdl: pd.DataFrame) -> pd.DataFrame:
                 "coverage_pct": round(float(first["coverage_pct"]), 2),
             }
         )
-    return pd.DataFrame(rows).sort_values(["producer", "field_id", "year"]).reset_index(drop=True)
+    frame = pd.DataFrame(rows)
+    frame["__field_ord"] = frame["field_id"].map(_natural_field_key)
+    return (
+        frame.sort_values(["producer", "__field_ord", "year"])
+        .drop(columns=["__field_ord"])
+        .reset_index(drop=True)
+    )
 
 
 def transition_table(dominant: pd.DataFrame) -> pd.DataFrame:
@@ -531,8 +578,9 @@ def figure_field_distribution(field_table: pd.DataFrame, path: Path, dpi: int) -
     fig.text(
         0.5,
         -0.01,
-        "Top-10 largest corn/soybean CSB fields per county; 40-300 ha selection cap. "
-        "Truncated sample, not representative of the county or state.",
+        "Real USDA CSB field polygons: original assignment-1 fields retained (r1-r3 for IL, IA; NE added from scratch), "
+        "plus a corn/soybean expansion filtered by crop, 40-300 ha area, and county containment. "
+        "Not a ranked sample; truncated, non-random demo fields.",
         ha="center",
         va="top",
         fontsize=7.5,
@@ -622,7 +670,7 @@ def figure_precip(season: pd.DataFrame, path: Path, dpi: int) -> None:
     axes[0].set_ylabel("Apr-Sep precipitation (mm)")
     fig.suptitle(
         "Growing-season precipitation by NASA POWER climate unit, 2021-2025\n"
-        "Bars are climate units (0.5-degree cells), not fields: fields sharing a cell are one value",
+        "Bars are MERRA-2 grid cells (~0.5 deg lat x 0.625 deg lon), not fields: fields sharing a cell are one value",
         fontsize=11.5,
         fontweight="bold",
     )
@@ -766,7 +814,7 @@ def figure_dominant_matrix(dominant: pd.DataFrame, path: Path, dpi: int) -> None
     fig, axes = plt.subplots(1, 3, figsize=(16.0, 7.2), sharey=False)
     for ax, producer in zip(axes, PRODUCERS):
         sub = dominant[dominant["producer"] == producer.key]
-        fields = sorted(sub["field_id"].unique(), reverse=True)
+        fields = sorted(sub["field_id"].unique(), key=_natural_field_key)
         years = list(range(CDL_YEARS[0], CDL_YEARS[1] + 1))
         indexed = sub.set_index(["field_id", "year"])
         for row_index, field_id in enumerate(fields):
@@ -1215,12 +1263,12 @@ def main(argv: list[str] | None = None) -> int:
             "matplotlib": matplotlib.__version__,
         },
         "notes": [
-            "Fields sharing identical NASA POWER daily series are one climate unit; they are not independent observations.",
+            "Fields sharing identical NASA POWER daily series form one distinct climate unit; fields in a unit share that cell's data and are not independent observations.",
             "Growing-season precipitation is summed per climate unit, never across fields.",
             "CDL shares are normalized to classified pixels; coverage and NoData are reported separately and never redistributed.",
             "CSB crop labels are the 2023 boundary snapshot, not annual CDL results.",
             "Weak dominance is descriptive (<10 percentage-point top-two gap), not statistical uncertainty.",
-            "Demo field selection is top-10 corn/soybean fields by area; it is not representative of the county or state.",
+            "Demo field selection retains the original assignment-1 fields (r1-r3 for IL, IA) and adds a corn/soybean expansion filtered by crop, 40-300 ha area, and county containment; NE was selected from scratch. Not a ranked sample and not representative of the county or state.",
         ],
     }
     (manifest_dir / "run_manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")

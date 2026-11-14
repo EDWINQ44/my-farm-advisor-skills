@@ -54,19 +54,25 @@ overlap. This is a truncated, non-random sample.
 | `RH2M` | % | Relative humidity |
 | `WS10M` | m/s | Wind speed at 10 m |
 
-Source: NASA POWER S3 Zarr (MERRA-2 + SYN1DEG), local solar time. Model output
-on a ~0.5-degree grid, sampled at field centroids.
+Source: NASA POWER S3 Zarr (MERRA-2 + SYN1DEG), local solar time. Daily
+variables come from two gridded products: `T2M`, `T2M_MAX`, `T2M_MIN`,
+`PRECTOTCORR`, `RH2M`, `WS10M` from **MERRA-2** on a ~0.5 deg latitude x 0.625 deg
+longitude grid, and `ALLSKY_SFC_SW_DWN` from **SYN1DEG** on a 1-degree grid.
+Values are sampled at field centroids (nearest grid cell).
 
 Checks: no NaN, no `-999` fill values, exactly 1826 dates, 10 fields.
 
-**Climate units:** fields whose daily `T2M` series are identical are one NASA
-POWER cell. The script labels them `<producer>-1`, `-2`, ... and asserts that
-all climate variables are also identical inside the unit. Effective sample
-size: IL 2, IA 2, NE 3 units. Field counts per unit are reported in
-`t_b_climate_units.csv`; fields are never treated as independent climate
-replicates.
+**Distinct climate units:** fields whose daily `T2M` series are identical are
+one NASA POWER (MERRA-2) cell and one distinct climate unit. The script labels
+them `<producer>-1`, `-2`, ... and asserts that all climate variables are
+identical inside the unit. Fields in a shared cell are **not** independent
+observations, so the effective sample size is the number of distinct units:
+IL 2, IA 2, NE 3. Field counts per unit are reported in `t_b_climate_units.csv`.
 
-Growing season: April 1 - September 30 (183 days every year). Precipitation is
+Growing season: April 1 - September 30 (183 days every year). Each
+unit-year window must contain **183 days with valid precipitation and
+temperature values** (no NaN, no `-999` fill), not merely 183 rows; the script
+fails if any April-September day is missing or invalid. Precipitation is
 summed per unit-date after deduplication; temperature is the mean. Summing
 field rows without deduplication multiplies the same rainfall.
 
@@ -118,9 +124,15 @@ computed separately in EPSG:5070 (equal-area).
 
 ## Known interpretation limits
 
-- No per-field irrigation data; irrigation cannot be attributed.
-- No soil analysis in this workflow.
-- The three producers are not representative samples of their states.
+- The demo producers are three demonstration farms, **not representative
+  samples** of their states. Fields retain original assignment-1 fields plus a
+  corn/soybean expansion filtered by crop, area and county; not a ranked sample.
+- Field boundaries are a single **CSB 2023 snapshot**, not annual or cadastral
+  history.
+- The only irrigation evidence is **county-level** (e.g. NASS Census of
+  Agriculture for York County); no per-field irrigation can be attributed.
 - CDL is a classification product with mixed pixels and class error; "Other"
-  is heterogeneous.
-- Weather is modelled cell data, not on-farm measurement.
+  is heterogeneous. CDL shares are normalized to **classified** area, with
+  coverage/NoData reported separately.
+- No soil analysis in this workflow.
+- Weather is modelled grid-cell data, not on-farm measurement.
