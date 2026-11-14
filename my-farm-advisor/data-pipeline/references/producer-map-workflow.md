@@ -29,12 +29,16 @@ Farm data pipeline (USDA CSB/FIBOA; EPSG:4326 Polygon):
 ${DATA_PIPELINE_DATA_ROOT}/data-pipeline/growers/<grower>/farms/<farm>/fields/<field>/boundary/field_boundary.geojson
 ```
 
-Producers used for assignment-1 (Phase 3):
+Producers after assignment-2 expansion (assignment-1 fields preserved):
 
-| Grower (producer) | Farm (display_name) | Fields (real polygons) | State |
-|---|---|---|---|
-| `il-dekalb-grower` | DeKalb Demo Farm | il-r1, il-r2, il-r3 | IL |
-| `ia-story-grower` | Story Demo Farm | ia-r1, ia-r2, ia-r3 | IA |
+| Grower (producer) | Farm (display_name) | Fields (real polygons) | State | County |
+|---|---|---|---|---|
+| `il-dekalb-grower` | DeKalb Demo Farm | il-r1 … il-r10 (r1–r3 from assignment 1) | IL | DeKalb |
+| `ia-story-grower` | Story Demo Farm | ia-r1 … ia-r10 (r1–r3 from assignment 1) | IA | Story |
+| `ne-york-grower` | York Demo Farm | ne-r1 … ne-r10 | NE | York |
+
+Producer maps were not re-rendered during the assignment-2 dataset expansion. Run the
+command below when maps are requested; grower and farm slugs above are the targets.
 
 ## Runtime contract
 
