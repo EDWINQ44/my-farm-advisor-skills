@@ -8,3 +8,4 @@ Open these guides when analyzing agricultural datasets, comparing conditions, or
 - [Time Series Guide](eda-time-series/GUIDE.md) - seasonal and longitudinal views
 - [Visualize Guide](eda-visualize/GUIDE.md) - charts, plots, and dashboards
 - [Farm Comparison Guide](eda-farm-comparison/GUIDE.md) - cross-producer field, climate, CDL, and static boundary comparison
+- [Field-season storyline](field-season-storyline/SKILL.md) — field-year NDVI, daily weather and GDD dashboard.

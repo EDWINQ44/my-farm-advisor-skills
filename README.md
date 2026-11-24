@@ -563,3 +563,7 @@ my-farm-advisor-skills/
 
 Keep edits focused, keep operational data in the runtime root, and route
 through the nearest `INDEX.md` before opening detailed workflow docs.
+
+## Assignment 3 — Field-season weather and NDVI storylines
+
+[View the 2024 corn dashboard](my-farm-advisor/eda/field-season-storyline/figures/ia-r1-2024.png) for field ia-r1 in Story County, Iowa, or [browse all five seasons](my-farm-advisor/eda/field-season-storyline/figures/). The [workflow and rerun instructions](my-farm-advisor/eda/field-season-storyline/README.md) show how annual CDL, field-masked Sentinel observations and daily NASA POWER weather are aligned with rainfall, temperature extremes and cumulative GDD.
